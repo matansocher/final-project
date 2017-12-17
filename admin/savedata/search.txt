@@ -1,0 +1,33 @@
+{
+"personal":[
+{"pageName": "exp1"},
+{"pageName": "exp2"},
+{"pageName": "exp3"},
+{"pageName": "exp4"},
+{"pageName": "exp5"},
+{"pageName": "exp6"},
+{"pageName": "adminMain"},
+{"pageName": "advertisment"},
+{"pageName": "dataPage"},
+{"pageName": "exportDataPage"},
+{"pageName": "feelings"},
+{"pageName": "game"},
+{"pageName": "general"},
+{"pageName": "graphs"},
+{"pageName": "helpTask"},
+{"pageName": "messages"},
+{"pageName": "moneyAnnouncment"},
+{"pageName": "moneyPayment"},
+{"pageName": "panas"},
+{"pageName": "paymentAndDonation"},
+{"pageName": "personalInfromation"},
+{"pageName": "pictures"},
+{"pageName": "preferences1"},
+{"pageName": "preferences2"},
+{"pageName": "sentenceCompletion"},
+{"pageName": "startpage"},
+{"pageName": "text"},
+{"pageName": "userProfile"},
+{"pageName": "viewData"}
+]
+}

@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+  <link rel='stylesheet' type='text/css' href='../myStyle.css'/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Haifa Study</title>
+<style media="screen">
+td,th,thead {
+    text-align: center;
+}
+#picFixed{
+  position: fixed;
+  bottom : 0;
+  right : 0;
+  width: 100%;
+  z-index:1;
+}
+</style>
+</head>
+
+<body class="body">
+
+  <div id="picture1" style="display: none">
+      <img src="Pic1Sea.jpg" id="picFixed">
+  </div>
+  <div id="picture3" style="display: none">
+      <img src="Pic3Money.jpg" id="picFixed">
+  </div>
+
+  <header>
+      <div class="container">
+  	<div class="row">
+  		<div class="col-sm-12">
+        <h1 id="header"></h1>
+  		</div>
+
+  	</div>
+  	</div>
+  </header>
+
+<div class="loader" id="loader"></div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div class="container1">
+      		<div class="row">
+      			<div class="col-sm-12">
+              <div align="center">
+                <h2 id="description" class="hebrew"></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+  <article class="container">
+    <div class="formBox">
+      <form class="hebrew" method="post" action="pageAfterAdvertismentRank.php" onsubmit="return validateForm()">
+        <div id="contentDiv" class="hebrew">
+        </div>
+          <div align="center">
+            <br>
+            <h3 class="center" id="errorMessage" style="display: none"></h3>
+            <br>
+            <input type="submit" name="button" id="next" value="המשך">
+          </div>
+        </form>
+
+<br><br><br><br><br><br><br><br><br><br>
+</div>
+</div>
+</div>
+
+  </div>
+
+<script>
+
+$(document).ready(function(){
+  $("#picture1").hide();
+  $("#picture2").hide();
+  $("#picture3").hide();
+  $.ajax({
+      type: "GET",
+      url: "showPicture.php",
+      success: function(data){
+          if(data==4 || data==7 )
+              $("#picture1").show();
+         if(data==5 || data==8 )
+              $("#picture2").show();
+          if(data==3 || data==6 )
+             $("#picture3").show();
+         }
+      });
+
+  $.ajax({
+      type: "GET",
+      url: "../getDataToPages/getDataToAdvertisment.php",
+      success: function(data){
+    // data is a string that will return from the db
+    // the string will contain all the fields for general page
+
+    var parsed = JSON.parse(data); // get parsed JSON
+    var arr = []; // empty array
+    for(var x in parsed){
+      arr.push(parsed[x]); // push every element to the array
+    }
+
+    $("#header").append(arr[0]);
+    $("#description").append(arr[1]);
+    $("#errorMessage").append(arr[2]);
+    //$("#text").append(arr[4]);
+
+    var add = "<input type='radio' name='choise' value='1'> " + arr[5] + "<br>";
+    add += "<input type='radio' name='choise' value='2'> " + arr[6] + "<br>";
+    add += "<input type='radio' name='choise' value='3'> " + arr[7] + "<br>";
+    add += "<input type='radio' name='choise' value='4'> " + arr[8] + "<br>";
+    add += "<input type='radio' name='choise' value='5'> " + arr[9] + "<br><hr>";
+    $("#contentDiv").append(add);
+
+  }
+    });
+
+    setTimeout(function(){
+          $("#loader").hide();
+          $("#myForm").show();
+      }, 1000);
+   });
+
+   function validateForm() {
+       var radioButton = document.getElementsByName("choise");
+
+       for(var i = 0; i < radioButton.length; i++) {
+         if(radioButton[i].checked) {
+           return true;
+          }
+         }
+        $("#errorMessage").show();
+          return false;
+   }
+
+window.location.hash="no-back-button";
+window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
+window.onhashchange=function(){window.location.hash="";}
+
+</script>
+
+
+</body>
+</html>

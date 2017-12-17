@@ -1,0 +1,1 @@
+now if a user dows not finish the exp the counter will not count it. the counter dows not count number of exps but number of groups

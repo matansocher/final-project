@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+  <link rel='stylesheet' type='text/css' href='../myStyle.css'/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Haifa Study</title>
+<style media="screen">
+</style>
+</head>
+
+<body class="body">
+  <header>
+      <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- <h1>אנא המתן להעלאת השאלון</h1> -->
+        <h1 id="header"></h1>
+
+      </div>
+    </div>
+    </div>
+  </header>
+
+  <div class="loader" id="loader"></div>
+
+  <div class="container1">
+      <div class="row">
+        <div class="col-sm-12">
+          <h4 id="description"></h4>
+        <br>
+      </div>
+    </div>
+  </div>
+
+
+<article class="container">
+		<div class="row">
+			<div class="col-sm-12">
+        	<div align="center">
+
+            <div align="center" id="divForPic">
+
+                </div>
+              <br><br>
+<br><br>
+
+    </div>
+	</div>
+</div>
+</article>
+
+
+<script>
+
+</script>
+
+
+</body>
+</html>
+<script>
+
+$(document).ready(function(){
+  $.ajax({
+      type: "GET",
+      url: "../getDataToPages/getDataToPicMoney.php",
+      success: function(data){
+    // data is a string that will return from the db
+    // the string will contain all the fields for general page
+
+    var parsed = JSON.parse(data); // get parsed JSON
+    var arr = []; // empty array
+    for(var x in parsed){
+      arr.push(parsed[x]); // push every element to the array
+    }
+
+    $("#header").append(arr[0]);
+    $("#description").append(arr[1]);
+    $("#divForPic").append(arr[2]);
+      }
+    });
+    setTimeout(function(){
+          $("#loader").hide();
+          $("#myForm").show();
+      }, 1000);
+   });
+
+window.location.hash="no-back-button";
+window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
+window.onhashchange=function(){window.location.hash="";}
+setTimeout(function(){window.location.href='../panas1.php'},8000);
+</script>

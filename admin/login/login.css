@@ -1,0 +1,56 @@
+body
+{
+    background-color: #1b1b1b;
+    padding-top: 40px;
+
+}
+.form-signin {
+    max-width: 280px;
+    padding: 15px;
+    margin:100px;
+    margin-top:160px;
+    margin-left: 100px;
+
+  }
+.panel-default {
+opacity: 0.9;
+/*margin-top:30px;*/
+}
+.input-group-addon
+{
+  border-radius: 2px;
+    background-color: rgb(50, 118, 177);
+    border-color: rgb(40, 94, 142);
+    color: rgb(255, 255, 255);
+}
+
+.form-signup input[type="text"],.form-signup input[type="password"] { border: 1px solid rgb(50, 118, 177); font-size: 20px;}
+.fullscreen_bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-image: url('backgroundLogin1.jpg');
+    background-repeat:repeat;
+  }
+  h2{
+    color: #1A2732;
+    font-family: simpleFont;
+    text-align: center;
+    font-style: oblique;
+    font-size: 30px;
+  }
+  @font-face {
+     font-family: simpleFont;
+     src: url(../SimpleCLM-Bold.woff);
+  }
+#errorMsg{
+  color: red;
+  font-family: simpleFont;
+  text-align: center;
+  font-style: oblique;
+  font-size: 20px;
+}

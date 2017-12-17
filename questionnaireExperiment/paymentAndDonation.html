@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+  <link rel='stylesheet' type='text/css' href='../myStyle.css'/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Haifa Study</title>
+<style media="screen">
+input[type='checkbox'] {
+  width: 1.5em;
+  height: 1.5em;
+}
+</style>
+</head>
+
+<body class="body">
+
+<header>
+    <div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+      <h1 id="header"></h1>
+		</div>
+
+	</div>
+	</div>
+</header>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div align="center">
+        <h2 id="description" class="hebrew"></h2>
+
+      <div class="loader" id="loader"></div>
+
+      <br>
+
+      <form class="hebrew" method="post" action="pageAfterPaymentAndDonation.php" onsubmit="return validateForm()">
+        <!-- <div class="form-group"> -->
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-8">
+              </div>
+              <div class="col-sm-4">
+                <h4 id="option1"></h4>
+                  <!-- <input type="text" class="form-control hebrew" id="howMuchToDonate" name="howMuchToDonate" placeholder="סכום לתרומה">
+                  <input type="text" class="form-control hebrew" id="whoToDonate" name="whoToDonate" placeholder="שם עמותה לתרומה"> -->
+              </div>
+            </div>
+          </div>
+            <br><br>
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-4">
+                </div>
+                <div class="col-sm-8">
+                  <table style="display: none">
+                    <tbody id="tableContent">
+                      <tr>
+                        <td>Paypal<label class='invalid' id='invalidPaypal'></label></td>
+                        <td><input type='checkbox' name='paypalOption' id='paypalOption'></td>
+                        <td><input type='text' class='form-control hebrew' id='paypalMail' name='paypalMail' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder='כתובת מייל'></td>
+                      </tr>
+                      <tr>
+                        <td>Cellarix<label class='invalid' id='invalidCellarix'></label></td>
+                        <td><input type='checkbox' name='cellarixOption' id='cellarixOption'></td>
+                        <td><input type='text' class='form-control hebrew' id='cellarixPhone' name='cellarixPhone' onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder='מספר פלאפון'></td>
+                      </tr>
+                      <tr>
+                        <td>Bit<label class='invalid' id='invalidBit'></label></td>
+                        <td><input type='checkbox' name='bitOption' id='bitOption'></td>
+                        <td><input type='text' class='form-control hebrew' id='bitPhone' name='bitPhone' onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder='מספר פלאפון'></td>
+                      </tr>
+                      <tr>
+                        <td>המחאה<label class='invalid' id='invalidCheck'></label></td>
+                        <td><input type='checkbox' name='checkOption' id='checkOption'></td>
+                        <td><input type='text' class='form-control hebrew' id='checkName' name='checkName' placeholder='שם מלא'></td>
+                        <td><input type='text' class='form-control hebrew' id='checkAddress' name='checkAddress' placeholder='כתובת למשלוח'></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          <br><br>
+          <h3 class="center" id="errorMessage" style="display: none"></h3>
+          <br>
+          <input type="submit" name="button" id="next" value="המשך">
+        <!-- </div> -->
+      </form>
+
+<br><br><br>
+</div>
+</div>
+</div>
+
+  </div>
+</div>
+
+<script>
+
+$(document).ready(function(){
+  $.ajax({
+      type: "GET",
+      url: "../getDataToPages/getDataToPaymentAndDonation.php",
+      success: function(data){
+    // data is a string that will return from the db
+    // the string will contain all the fields for general page
+
+    var parsed = JSON.parse(data); // get parsed JSON
+    var arr = []; // empty array
+    for(var x in parsed){
+      arr.push(parsed[x]); // push every element to the array
+    }
+
+    $("#header").append(arr[0]);
+    $("#description").append(arr[1]);
+    $("#errorMessage").append(arr[2]);
+    $("#option1").append(arr[3]); // to daonate
+    $("#option1").append("<label class='invalid' id='invalidDonation'></label>");
+    var option1ForDonation = "<input type='text' class='form-control hebrew' id='howMuchToDonate' name='howMuchToDonate' onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder='סכום לתרומה'>";
+    $("#option1").append(option1ForDonation + "<br>");
+    $("#option1").append(arr[4]);// to get
+    var selectWhoToDonate = "<select id='whoToDonate' name='whoToDonate'>";
+    selectWhoToDonate += "<option value='empty'></option>";
+    selectWhoToDonate += "<option value='cancer'>האגודה למלחמה בסרטן</option>";
+    selectWhoToDonate += "<option value='sugar'>האגודה לסוכרת נעורים</option>";
+    selectWhoToDonate += "<option value='animals'>צער בעלי חיים</option>";
+
+    $("#option1").append(selectWhoToDonate);
+    $("table").show();
+
+    document.getElementById("paypalMail").disabled = true; // disable oll text fields by default
+    document.getElementById("cellarixPhone").disabled = true;
+    document.getElementById("bitPhone").disabled = true;
+    document.getElementById("checkName").disabled = true;
+    document.getElementById("checkAddress").disabled = true;
+  }
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "showPicture.php",
+        success: function(data){
+            if(data==4 || data==7 )
+                $("#picture1").show();
+           if(data==5 || data==8 )
+                $("#picture2").show();
+            if(data==3 || data==6 )
+               $("#picture3").show();
+           }
+        });
+
+    setTimeout(function(){
+          $("#loader").hide();
+          $("#myForm").show();
+      }, 1000);
+   });
+
+   function validateForm() {
+
+     var TFhowMuchToDonate = document.getElementById("howMuchToDonate");
+     var TFWhoToDonate = document.getElementById("whoToDonate");
+
+     var CBpaypalOption = document.getElementById("paypalOption");
+     var TFpaypalMail = document.getElementById("paypalMail");
+
+     var CBcellarixOption = document.getElementById("cellarixOption");
+     var TFcellarixPhone = document.getElementById("cellarixPhone");
+
+     var CBbitOption = document.getElementById("bitOption");
+     var TFbitPhone = document.getElementById("bitPhone");
+
+     var CBcheckOption = document.getElementById("checkOption");
+     var TFcheckName = document.getElementById("checkName");
+     var TFcheckAddress = document.getElementById("checkAddress");
+
+    if (TFhowMuchToDonate.value == '' || TFhowMuchToDonate.value > 100 || TFhowMuchToDonate.value < 0) { // did not fill the amount
+      $("#errorMessage").empty();
+      $("#errorMessage").append("אנא בחר סכום לתרומה בין 0 ל-100 שקלים");
+      $("#invalidDonation").empty();
+      $("#invalidDonation").append("*");
+      $("#errorMessage").show();
+      return false;
+    }
+
+    if (TFhowMuchToDonate.value == 100) { // wants only to donate
+      if (TFWhoToDonate.value == 'empty') {
+        $("#errorMessage").empty();
+        $("#errorMessage").append("אנא בחר עמותה אליה ברצונך לתרום את הסכום");
+        $("#errorMessage").show();
+        return false;
+      }
+    }
+
+    if (TFhowMuchToDonate.value == 0) { // wants only to get money
+      if ((CBpaypalOption.checked == false) && (CBcellarixOption.checked == false) && (CBbitOption.checked == false) && (CBcheckOption.checked == false)) { // if did mention even 1 option to get the money
+        $("#errorMessage").empty();
+        $("#errorMessage").append("אנא בחר לפחות דרך אחת בה תרצה לקבל את הסכום");
+        $("#errorMessage").show();
+        return false;
+      }
+      if((CBpaypalOption.checked == true) && (new String(TFpaypalMail.value).valueOf() == new String("").valueOf())){
+        $("#invalidPaypal").empty();
+        $("#invalidPaypal").append("*");
+        $("#errorMessage").empty();
+        $("#errorMessage").append("אנא מלא כתובת דואר אלקטרוני תיקנית על מנת לקבל את הסכום");
+        $("#errorMessage").show();
+        return false;
+      } else {
+        $("#invalidPaypal").empty();
+      }
+      if((CBcellarixOption.checked == true) &&
+      ((new String(TFcellarixPhone.value).valueOf().length < 10)
+      || (new String(TFcellarixPhone.value).valueOf() == new String("").valueOf()))){
+        $("#invalidCellarix").empty();
+        $("#invalidCellarix").append("*");
+        $("#errorMessage").empty();
+        $("#errorMessage").append("אנא מלא מספר טלפון סלולארי תיקני על מנת לקבל את הסכום");
+        $("#errorMessage").show();
+        return false;
+      } else {
+        $("#invalidCellarix").empty();
+      }
+      if((CBbitOption.checked == true) && ((new String(TFbitPhone.value).valueOf().length < 10) || (new String(TFbitPhone.value).valueOf() == new String("").valueOf()))){
+        $("#invalidBit").empty();
+        $("#invalidBit").append("*");
+        $("#errorMessage").empty();
+        $("#errorMessage").append("אנא מלא מספר טלפון סלולארי תיקני על מנת לקבל את הסכום");
+        $("#errorMessage").show();
+        return false;
+      } else {
+        $("#invalidBit").empty();
+      }
+      if((CBcheckOption.checked == true) && ((new String(TFcheckName.value).valueOf() == new String("").valueOf()) || (new String(TFcheckAddress.value).valueOf() == new String("").valueOf()))){
+        $("#invalidCheck").empty();
+        $("#invalidCheck").append("*");
+        $("#errorMessage").empty();
+        $("#errorMessage").append("אנא מלא שם וכתובת לקבל ההמחאה");
+        $("#errorMessage").show();
+        return false;
+      } else {
+        $("#invalidCheck").empty();
+      }
+    }
+
+     if ((TFhowMuchToDonate.value < 100) && (TFhowMuchToDonate.value > 0)) { // check if donation between 0 and 100
+       if (TFWhoToDonate.value == 'empty') { // forgot who to donate
+         $("#errorMessage").empty();
+         $("#errorMessage").append("אנא בחר עמותה אליה ברצונך לתרום את הסכום");
+         $("#errorMessage").show();
+         return false;
+       }
+       // forgot to say how to get the money
+       if ((CBpaypalOption.checked == false) && (CBcellarixOption.checked == false) && (CBbitOption.checked == false) && (CBcheckOption.checked == false)) { // if did mention even 1 option to get the money
+         $("#errorMessage").empty();
+         $("#errorMessage").append("אנא בחר לפחות דרך אחת בה תרצה לקבל את הסכום");
+         $("#errorMessage").show();
+         return false;
+       }
+       if((CBpaypalOption.checked == true) && (new String(TFpaypalMail.value).valueOf() == new String("").valueOf())){
+         $("#invalidPaypal").empty();
+         $("#invalidPaypal").append("*");
+         $("#errorMessage").empty();
+         $("#errorMessage").append("אנא מלא כתובת דואר אלקטרוני תיקנית על מנת לקבל את הסכום");
+         $("#errorMessage").show();
+         return false;
+       } else {
+         $("#invalidPaypal").empty();
+       }
+       if((CBcellarixOption.checked == true) &&
+       ((new String(TFcellarixPhone.value).valueOf().length < 10)
+       || (new String(TFcellarixPhone.value).valueOf() == new String("").valueOf()))){
+         $("#invalidCellarix").empty();
+         $("#invalidCellarix").append("*");
+         $("#errorMessage").empty();
+         $("#errorMessage").append("אנא מלא מספר טלפון סלולארי תיקני על מנת לקבל את הסכום");
+         $("#errorMessage").show();
+         return false;
+       } else {
+         $("#invalidCellarix").empty();
+       }
+       if((CBbitOption.checked == true) && ((new String(TFbitPhone.value).valueOf().length < 10) || (new String(TFbitPhone.value).valueOf() == new String("").valueOf()))){
+         $("#invalidBit").empty();
+         $("#invalidBit").append("*");
+         $("#errorMessage").empty();
+         $("#errorMessage").append("אנא מלא מספר טלפון סלולארי תיקני על מנת לקבל את הסכום");
+         $("#errorMessage").show();
+         return false;
+       } else {
+         $("#invalidBit").empty();
+       }
+       if((CBcheckOption.checked == true) && ((new String(TFcheckName.value).valueOf() == new String("").valueOf()) || (new String(TFcheckAddress.value).valueOf() == new String("").valueOf()))){
+         $("#invalidCheck").empty();
+         $("#invalidCheck").append("*");
+         $("#errorMessage").empty();
+         $("#errorMessage").append("אנא מלא שם וכתובת לקבל ההמחאה");
+         $("#errorMessage").show();
+         return false;
+       } else {
+         $("#invalidCheck").empty();
+       }
+     }
+     return true;
+   }
+
+   $('input[name=paypalOption]').change(function(){
+   if($(this).is(':checked')){
+     document.getElementById("paypalMail").disabled = false;
+   }
+   else{
+     document.getElementById("paypalMail").disabled = true;
+     $('#paypalMail').val("");
+   }
+   });
+
+   $('input[name=cellarixOption]').change(function(){
+   if($(this).is(':checked')){
+     document.getElementById("cellarixPhone").disabled = false;
+   }
+   else{
+     document.getElementById("cellarixPhone").disabled = true;
+     $('#cellarixPhone').val("");
+   }
+   });
+
+   $('input[name=bitOption]').change(function(){
+   if($(this).is(':checked')){
+     document.getElementById("bitPhone").disabled = false;
+   }
+   else{
+     document.getElementById("bitPhone").disabled = true;
+     $('#bitPhone').val("");
+   }
+   });
+
+   $('input[name=checkOption]').change(function(){
+   if($(this).is(':checked')){
+     document.getElementById("checkName").disabled = false;
+     document.getElementById("checkAddress").disabled = false;
+   }
+   else{
+     document.getElementById("checkName").disabled = true;
+     document.getElementById("checkAddress").disabled = true;
+     $('#checkName').val("");
+     $('#checkAddress').val("");
+   }
+   });
+
+// set the texts from php with ajax
+$(function() {
+$('input:text').keydown(function(e) {
+if(e.keyCode==87)
+    return false;
+});
+});
+
+$(function() {
+$("#comment").keydown(function(e) {
+if(e.keyCode==87)
+    return false;
+});
+});
+
+window.location.hash="no-back-button";
+window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
+window.onhashchange=function(){window.location.hash="";}
+
+</script>
+
+
+</body>
+</html>

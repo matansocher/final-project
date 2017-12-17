@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+  <link rel='stylesheet' type='text/css' href='../myStyle.css'/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="noMoneyWordsJS.js"></script>
+<title>Haifa Study</title>
+</head>
+
+<body class="body">
+
+<header>
+    <div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+      <!-- <h1>השלמת משפט</h1> -->
+      <h1 id="header"></h1>
+		</div>
+
+	</div>
+	</div>
+</header>
+
+<div class="loader" id="loader"></div>
+
+<div class="container">
+  <div class="formBox">
+  <div class="row">
+  <div class="col-sm-12">
+
+      <div align="center">
+
+        <!-- <h4>
+          במשימה זו יש להרכיב משפט מהמילים הבאות
+          <br>
+        לחץ על המילה בכדי להוסיפה למשפט, עבור מחיקה יש ללחוץ על המילה שנית
+      </h4> -->
+      <h2 id="description"></h2>
+      <br>
+      <h3 class="center" id="errorMessage" style="display: none"></h3>
+      <br>
+    <br>
+  <button type="button" class="btnSentence" id="btn01" onclick="myFunction1('btn01')"></button>
+  <button type="button" class="btnSentence" id="btn02" onclick="myFunction1('btn02')"></button>
+  <button type="button" class="btnSentence" id="btn03" onclick="myFunction1('btn03')"></button>
+  <button type="button" class="btnSentence" id="btn04" onclick="myFunction1('btn04')"></button>
+  <button type="button" class="btnSentence" id="btn05" onclick="myFunction1('btn05')"></button>
+
+  <br><br>
+
+  <div id="lab"><label id="label">  </label></div>
+  <button type="button" id="clear" onclick="clean()">נקה</button>
+  <br><br><br>
+<div class="submit">
+
+  <form name="myForm" class="hebrew" action="../panas1.php" method="post" onsubmit="return validation()">
+    <input type="submit" name="button" id="next" value="המשך">
+  </form>
+
+<br><br><br>
+</div>
+</div>
+</div>
+
+
+  </div>
+</div>
+</div>
+
+<script>
+
+
+var array1 = ["", "", "", "", ""];
+var x;
+
+function clean(){
+     array1 = ["", "", "", "", ""];
+     $("#label").empty();
+     $("#label").append(array1);
+}
+
+
+function myFunction1(myBtn) {
+  x = document.getElementById(myBtn).innerHTML;
+  for (i = 0; i < array1.length; i++) {
+    if(array1[i]==x || array1[i]==(x+" ")){ // if the word exists - delete it
+        array1[i]="";
+        arrangeSentence(i);
+        break;
+    }
+    if(array1[i]==""){ // if the word doesent exist - add space and the word after it
+       array1[i]=x+" ";
+       break;
+   }
+ }
+    $("#label").empty();
+    $("#label").append(array1);
+}
+
+function arrangeSentence(flag){
+  for (i = flag; i < array1.length; i++) {
+    if (i==array1.length-1) {
+      array1[i]="";
+    }
+    else {
+        array1[i]=array1[i+1];
+    }
+  }
+}
+
+function validation() {
+  if (array1[3] == "") {
+    $("#errorMessage").show();
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
+window.location.hash="no-back-button";
+window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
+window.onhashchange=function(){window.location.hash="";}
+
+</script>
+
+
+</body>
+</html>
